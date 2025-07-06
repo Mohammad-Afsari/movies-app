@@ -4,12 +4,13 @@ import { useEffect, useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { fetchMovies, SearchResults } from '@/utils/getMovies'
 import { useRouter } from 'next/navigation'
-import { Button, Typography, Box, styled } from '@mui/material'
+import { Button, Typography, Box, styled, Skeleton } from '@mui/material'
 import Grid from '@mui/material/Grid'
 import Paper from '@mui/material/Paper'
 import classes from './MovieListingPage.module.css'
 import Image from 'next/image'
 import PlaceholderImage from '../../../misc/images/placeholder.jpg'
+import Link from 'next/link'
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: '#fff',
@@ -51,68 +52,94 @@ export const MovieListingPage = ({ searchTerm, page }: Props) => {
     )
   }
 
-  if (isLoading) return <div className={classes.root}>Loading...</div>
+  // TODO: use suspense and move up a layer
+  if (isLoading)
+    return (
+      <Box className={classes.root} sx={{ padding: 2 }}>
+        <Grid container spacing={2} justifyContent="center">
+          {Array.from({ length: 10 }).map((_, index) => (
+            <Grid key={index}>
+              <Item sx={{ padding: 0, borderRadius: 2, overflow: 'hidden' }}>
+                <Skeleton
+                  variant="rectangular"
+                  animation="wave"
+                  sx={{
+                    width: '100%',
+                    aspectRatio: '3/4',
+                    overflow: 'hidden',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    position: 'relative',
+                    backgroundColor: '#747474',
+                    minHeight: '500px',
+                  }}
+                />
+                <Box sx={{ p: 1 }}>
+                  <Skeleton variant="text" />
+                </Box>
+              </Item>
+            </Grid>
+          ))}
+        </Grid>
+      </Box>
+    )
 
   if (error) return <div className={classes.root}>Error loading movies...</div>
 
   if (!data?.Search?.length)
     return <div className={classes.root}>No movies found</div>
 
-  // TODO: Make the images items into links
-  // TODO: Skeleton loader
-  // TODO: size of the cards make them maybe the same?
-  // TODO: spinner?
-
   return (
     <Box className={classes.root} sx={{ padding: 2 }}>
       <Grid container spacing={2} justifyContent="center">
         {data.Search.map((movie: SearchResults) => (
           <Grid key={movie.imdbID}>
-            <Item sx={{ padding: 0, borderRadius: 2, overflow: 'hidden' }}>
-              <Box
-                sx={{
-                  width: '100%',
-                  aspectRatio: '3/4',
-                  overflow: 'hidden',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  position: 'relative',
-                  backgroundColor: '#eee',
-                  minHeight: '500px',
-                }}
-              >
-                {movie.Poster !== 'N/A' ? (
-                  <img
-                    src={movie.Poster}
-                    alt={movie.Title}
-                    style={{
-                      width: '100%',
-                      height: '100%',
-                      objectFit: 'cover',
-                    }}
-                  />
-                ) : (
-                  <Image
-                    src={PlaceholderImage}
-                    alt={movie.Title}
-                    fill
-                    style={{ objectFit: 'cover' }}
-                    sizes="100%"
-                  />
-                )}
-              </Box>
-              <Box sx={{ p: 1 }}>
-                <Typography
-                  variant="subtitle2"
-                  noWrap
-                  title={movie.Title}
-                  sx={{ fontWeight: 500 }}
+            <Link href={`/detail/${movie.imdbID}`}>
+              <Item sx={{ padding: 0, borderRadius: 2, overflow: 'hidden' }}>
+                <Box
+                  sx={{
+                    width: '100%',
+                    aspectRatio: '3/4',
+                    overflow: 'hidden',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    position: 'relative',
+                    minHeight: '500px',
+                  }}
                 >
-                  {movie.Title}
-                </Typography>
-              </Box>
-            </Item>
+                  {movie.Poster !== 'N/A' ? (
+                    <img
+                      src={movie.Poster}
+                      alt={movie.Title}
+                      style={{
+                        width: '100%',
+                        height: '100%',
+                        objectFit: 'cover',
+                      }}
+                    />
+                  ) : (
+                    <Image
+                      src={PlaceholderImage}
+                      alt={movie.Title}
+                      fill
+                      style={{ objectFit: 'cover' }}
+                    />
+                  )}
+                </Box>
+                <Box sx={{ p: 1 }}>
+                  <Typography
+                    variant="subtitle2"
+                    noWrap
+                    title={movie.Title}
+                    sx={{ fontWeight: 500 }}
+                  >
+                    {movie.Title}
+                  </Typography>
+                </Box>
+              </Item>
+            </Link>
           </Grid>
         ))}
       </Grid>
