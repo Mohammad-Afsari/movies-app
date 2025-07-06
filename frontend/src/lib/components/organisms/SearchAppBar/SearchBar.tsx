@@ -46,6 +46,12 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
     paddingLeft: `calc(1em + ${theme.spacing(4)})`,
     transition: theme.transitions.create('width'),
     [theme.breakpoints.up('xs')]: {
+      width: '15ch',
+      '&:focus': {
+        width: '20ch',
+      },
+    },
+    [theme.breakpoints.up('sm')]: {
       width: '20ch',
       '&:focus': {
         width: '30ch',
@@ -80,7 +86,7 @@ export default function SearchAppBar() {
   }
 
   return (
-    <Box sx={{ flexGrow: 1, top: 0 }} position="sticky">
+    <Box sx={{ flexGrow: 1, top: 0, zIndex: 10 }} position="sticky">
       <AppBar position="static">
         <Toolbar sx={{ justifyContent: 'center' }}>
           <div

@@ -9,8 +9,6 @@ export default function SearchPage() {
   const query = searchParams.get('query') || ''
   const page = Number(searchParams.get('page')) || 1
 
-  console.log(searchParams, query, page)
-
   if (!query) {
     return (
       <Box sx={{ p: 4 }}>
