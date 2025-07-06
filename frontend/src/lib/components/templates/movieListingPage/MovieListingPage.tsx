@@ -93,8 +93,8 @@ export const MovieListingPage = ({ searchTerm, page }: Props) => {
   return (
     <Box className={classes.root} sx={{ padding: 2 }}>
       <Grid container spacing={2} justifyContent="center">
-        {data.Search.map((movie: SearchResults) => (
-          <Grid key={movie.imdbID}>
+        {data.Search.map((movie: SearchResults, index) => (
+          <Grid key={index}>
             <Link href={`/detail/${movie.imdbID}`}>
               <Item sx={{ padding: 0, borderRadius: 2, overflow: 'hidden' }}>
                 <Box
@@ -124,6 +124,7 @@ export const MovieListingPage = ({ searchTerm, page }: Props) => {
                       src={PlaceholderImage}
                       alt={movie.Title}
                       fill
+                      sizes="100%"
                       style={{ objectFit: 'cover' }}
                     />
                   )}

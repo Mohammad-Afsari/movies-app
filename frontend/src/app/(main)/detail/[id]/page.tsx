@@ -4,6 +4,8 @@ type Props = {
   params: { id: string }
 }
 
-export default function DetailPage({ params }: Props) {
-  return <MovieDetailPage id={params.id} />
+export default async function DetailPage({ params }: Props) {
+  const { id } = await params
+
+  return <MovieDetailPage id={id} />
 }

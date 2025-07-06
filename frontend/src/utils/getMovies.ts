@@ -1,4 +1,5 @@
-// TODO: Temporary file - will need moving
+import { OMDB_API_BASE_URL } from '@/config/config'
+
 export type SearchResults = {
   Title: string
   Year: string
@@ -50,7 +51,9 @@ export const fetchMovies = async (
   movie: string,
   page: number,
 ): Promise<MoviesResponse> => {
-  const res = await fetch(`/api/movies?movie=${movie}&page=${page}`)
+  const res = await fetch(
+    `${OMDB_API_BASE_URL}/api/v1/movies?movie=${movie}&page=${page}`,
+  )
   if (!res.ok) throw new Error('Failed to fetch movies')
   return res.json()
 }
@@ -58,16 +61,7 @@ export const fetchMovies = async (
 export const fetchMovieDetails = async (
   id: string,
 ): Promise<MovieDetailsResponse> => {
-  const apiKey = process.env.OMDB_API_KEY
-  const url = process.env.OMDB_URL
-
-  console.log(apiKey, url)
-
-  const apiUrl = `${url}/?apikey=${apiKey}&i=${id}`
-
-  const res = await fetch(apiUrl, {
-    cache: 'no-store',
-  })
+  const res = await fetch(`${OMDB_API_BASE_URL}/api/v1/movies/details/${id}`)
 
   if (!res.ok) {
     throw new Error('Failed to fetch movie details')
