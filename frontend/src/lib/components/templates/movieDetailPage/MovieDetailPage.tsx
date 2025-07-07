@@ -15,6 +15,7 @@ import {
 import Image from 'next/image'
 import PlaceholderImage from '../../../misc/images/placeholder.jpg'
 import { useRouter } from 'next/navigation'
+import CircularIndeterminate from '../../organisms/Loader/Loader'
 
 type Props = {
   id: string
@@ -29,44 +30,34 @@ export const MovieDetailPage = ({ id }: Props) => {
     enabled: !!id,
   })
 
-  // TODO: Skeleton loader
-  if (isLoading) return <Typography>Loading...</Typography>
+  if (isLoading)
+    return (
+      <Box position="fixed" top="50%" left="50%">
+        <CircularIndeterminate />
+      </Box>
+    )
+
   if (error || !data)
-    return <Typography>Error loading movie details</Typography>
+    return <Typography>Error loading movie details.</Typography>
 
   return (
-    <Box
-      sx={{
-        padding: '16px',
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'left',
-      }}
-    >
-      <Box mb={2}>
-        <Button variant="contained" onClick={() => router.back()}>
+    <Box sx={{ px: 2, py: 4, display: 'flex', justifyContent: 'center' }}>
+      <Box sx={{ width: '100%', maxWidth: '1200px', textAlign: 'left' }}>
+        <Button
+          variant="contained"
+          onClick={() => router.back()}
+          sx={{ my: 3 }}
+        >
           ← Back
         </Button>
-      </Box>
-      <Box
-        sx={{
-          display: 'flex',
-          justifyContent: 'center',
-          p: 2,
-        }}
-      >
-        <Grid container spacing={4} display="flex" justifyContent="center">
-          <Grid
-            sx={{
-              xs: 12,
-              md: 4,
-            }}
-          >
+
+        <Grid container spacing={4}>
+          <Grid>
             <Card>
               <Box
                 sx={{
                   width: '100%',
-                  aspectRatio: '3/4',
+                  aspectRatio: '2/3',
                   overflow: 'hidden',
                   display: 'flex',
                   alignItems: 'center',
@@ -87,17 +78,15 @@ export const MovieDetailPage = ({ id }: Props) => {
                     src={PlaceholderImage}
                     alt={data.Title}
                     fill
-                    style={{
-                      objectFit: 'cover',
-                    }}
+                    style={{ objectFit: 'cover' }}
                   />
                 )}
               </Box>
             </Card>
           </Grid>
 
-          <Grid size={{ xs: 12, md: 8 }} sx={{ width: '100%' }}>
-            <Card sx={{ height: '100%', width: '100%' }}>
+          <Grid sx={{ width: '100%' }}>
+            <Card>
               <CardContent>
                 <Typography variant="h4">{data.Title}</Typography>
                 <Typography variant="subtitle1">

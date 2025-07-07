@@ -89,14 +89,11 @@ export default function SearchAppBar() {
     <Box sx={{ flexGrow: 1, top: 0, zIndex: 10 }} position="sticky">
       <AppBar position="static">
         <Toolbar sx={{ justifyContent: 'center' }}>
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '10px',
-              justifyContent: 'space-between',
-              width: '100%',
-            }}
+          <Box
+            display="flex"
+            alignItems="center"
+            justifyContent="space-between"
+            width="100%"
           >
             <Link href="/">
               <IconButton size="large" edge="start" aria-label="open drawer">
@@ -119,7 +116,7 @@ export default function SearchAppBar() {
             <Typography variant="h4" color="#256FE7">
               NapFlix
             </Typography>
-          </div>
+          </Box>
         </Toolbar>
       </AppBar>
     </Box>
