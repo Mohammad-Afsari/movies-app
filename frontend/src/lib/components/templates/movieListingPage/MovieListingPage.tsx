@@ -4,13 +4,21 @@ import { useEffect, useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { fetchMovies, SearchResults } from '@/utils/getMovies'
 import { useRouter } from 'next/navigation'
-import { Button, Typography, Box, styled, Skeleton } from '@mui/material'
+import {
+  Typography,
+  Box,
+  styled,
+  Pagination,
+  PaginationItem,
+} from '@mui/material'
 import Grid from '@mui/material/Grid'
 import Paper from '@mui/material/Paper'
-import classes from './MovieListingPage.module.css'
 import Image from 'next/image'
 import PlaceholderImage from '../../../misc/images/placeholder.jpg'
 import Link from 'next/link'
+import { MoviesFetchError } from '../../organisms/MoviesFetchError/MoviesFetchError'
+import { SkeletonLoader } from '../../organisms/SkeletonLoader/SkeletonLoader'
+import { NoSearchResults } from '../../organisms/NoSearchResults/NoSearchResults'
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: '#fff',
@@ -34,6 +42,7 @@ export const MovieListingPage = ({ searchTerm, page }: Props) => {
 
   useEffect(() => {
     setCurrentPage(page)
+    window.scrollTo({ top: 0, behavior: 'smooth' })
   }, [page])
 
   const { data, isLoading, error } = useQuery({
@@ -52,46 +61,14 @@ export const MovieListingPage = ({ searchTerm, page }: Props) => {
     )
   }
 
-  // TODO: use suspense and move up a layer
-  if (isLoading)
-    return (
-      <Box className={classes.root} sx={{ padding: 2 }}>
-        <Grid container spacing={2} justifyContent="center">
-          {Array.from({ length: 10 }).map((_, index) => (
-            <Grid key={index}>
-              <Item sx={{ padding: 0, borderRadius: 2, overflow: 'hidden' }}>
-                <Skeleton
-                  variant="rectangular"
-                  animation="wave"
-                  sx={{
-                    width: '100%',
-                    aspectRatio: '3/4',
-                    overflow: 'hidden',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    position: 'relative',
-                    backgroundColor: '#747474',
-                    minHeight: '500px',
-                  }}
-                />
-                <Box sx={{ p: 1 }}>
-                  <Skeleton variant="text" />
-                </Box>
-              </Item>
-            </Grid>
-          ))}
-        </Grid>
-      </Box>
-    )
+  if (isLoading) return <SkeletonLoader />
 
-  if (error) return <div className={classes.root}>Error loading movies...</div>
+  if (error) return <MoviesFetchError />
 
-  if (!data?.Search?.length)
-    return <div className={classes.root}>No movies found</div>
+  if (!data?.Search?.length) return <NoSearchResults />
 
   return (
-    <Box className={classes.root} sx={{ padding: 2 }}>
+    <Box sx={{ padding: 4 }}>
       <Grid container spacing={2} justifyContent="center">
         {data.Search.map((movie: SearchResults, index) => (
           <Grid key={index}>
@@ -152,25 +129,28 @@ export const MovieListingPage = ({ searchTerm, page }: Props) => {
         alignItems="center"
         gap={2}
       >
-        <Button
-          variant="contained"
-          disabled={currentPage === 1}
-          onClick={() => changePage(currentPage - 1)}
-        >
-          Prev
-        </Button>
-
-        <Typography variant="subtitle1">
-          Page {currentPage} of {totalPages}
-        </Typography>
-
-        <Button
-          variant="contained"
-          disabled={currentPage === totalPages}
-          onClick={() => changePage(currentPage + 1)}
-        >
-          Next
-        </Button>
+        <Box py={4} display="flex" justifyContent="center">
+          <Pagination
+            count={totalPages}
+            page={currentPage}
+            onChange={(_, value) => changePage(value)}
+            shape="rounded"
+            variant="outlined"
+            showFirstButton
+            showLastButton
+            renderItem={(item) => (
+              <PaginationItem
+                {...item}
+                sx={{
+                  '&.Mui-selected': {
+                    backgroundColor: '#256FE7',
+                    color: '#fff',
+                  },
+                }}
+              />
+            )}
+          />
+        </Box>
       </Box>
     </Box>
   )

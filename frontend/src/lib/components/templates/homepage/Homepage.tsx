@@ -1,10 +1,15 @@
-import { Typography } from '@mui/material'
-import classes from './Homepage.module.css'
+import { Box, Typography } from '@mui/material'
 
 export const HomePage = () => {
   return (
-    <div className={classes.root}>
+    <Box
+      display="flex"
+      textAlign="center"
+      justifyContent="center"
+      height="90vh"
+      alignItems="center"
+    >
       <Typography variant="h1">Welcome to the Movie library</Typography>
-    </div>
+    </Box>
   )
 }

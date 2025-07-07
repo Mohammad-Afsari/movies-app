@@ -43,7 +43,7 @@ Once `.env` has been set then run the server:
 npm run dev
 ```
 
-The backend server will be running at: http://localhost:5000
+The backend server will be running at: http://localhost:4000
 
 ### 2. Frontend Setup
 
