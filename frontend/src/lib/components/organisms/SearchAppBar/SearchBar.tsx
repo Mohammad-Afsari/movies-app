@@ -114,7 +114,7 @@ export default function SearchAppBar() {
               </Search>
             </form>
             <Typography variant="h4" color="#256FE7">
-              NapFlix
+              Movies
             </Typography>
           </Box>
         </Toolbar>
