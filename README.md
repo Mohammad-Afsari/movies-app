@@ -1,4 +1,4 @@
-# 🎬 Movies App - NapFlix
+# 🎬 Movies App
 
 A modern full-stack movie search application powered by the OMDB API.  
 Search for movies, explore detailed film information and enjoy a smooth user experience!
